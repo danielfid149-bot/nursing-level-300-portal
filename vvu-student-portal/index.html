@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VVU Student Portal</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="topbar"><nav class="nav"><a class="brand" href="index.html">VVU // PORTAL<small>COMPUTER SCIENCE · YEAR 1</small></a><div class="spacer"></div><button class="btn" onclick="toggleTheme()">◐ Theme</button></nav></header>
+<main class="shell">
+<section class="hero"><div class="card"><div class="eyebrow">2026/2027 · First Semester</div><h1>Study smarter.<br>Stay ready.</h1><p class="muted">Your personal Valley View University workspace for timetable, courses, notes, assignments and resources.</p></div><div class="card"><div class="eyebrow">Today</div><h2 id="todayLabel">Loading…</h2><p class="muted" id="todayText"></p><span class="chip">Local-first workspace</span></div></section>
+<div class="section-title"><h2>My Courses</h2><span class="muted">9 courses</span></div><section class="grid" id="courseGrid"></section>
+<div class="section-title"><h2>Weekly Timetable</h2><span class="muted">PE kept on Thursday</span></div>
+<div class="table-wrap"><table><thead><tr><th>Day</th><th>Time</th><th>Course</th><th>Venue / Note</th></tr></thead><tbody>
+<tr data-day="1"><td>Monday</td><td>7:00–9:30 AM</td><td><b>PHYS106</b> · Physics for Computer Science</td><td>CS3</td></tr>
+<tr data-day="1"><td>Monday</td><td>10:00 AM–12:30 PM</td><td><b>MATH171</b> · Introductory Mathematics for Computer Science</td><td>CS1</td></tr>
+<tr data-day="1"><td>Monday</td><td>2:00–4:30 PM</td><td><b>FREN121</b> · French for General Communication I</td><td>American High · Sec A</td></tr>
+<tr data-day="2"><td>Tuesday</td><td>10:00 AM–12:30 PM</td><td><b>ENGL111</b> · Language and Writing Skills I</td><td>Baobab RM3 · Sec C</td></tr>
+<tr data-day="2"><td>Tuesday</td><td>2:00–4:30 PM</td><td><b>COSC113</b> · Elements of Programming</td><td>CS3 · Sec B</td></tr>
+<tr data-day="3"><td>Wednesday</td><td>3:00–5:30 PM</td><td><b>COSC115</b> · Introduction to Computer Science I</td><td>CS2</td></tr>
+<tr data-day="4"><td>Thursday</td><td>5:00–6:30 PM</td><td><b>PEAC100</b> · Physical Activity</td><td>Basketball Court · Sec A</td></tr>
+<tr data-day="5"><td>Friday</td><td>—</td><td>No confirmed first-semester class</td><td>Use as review / catch-up block</td></tr>
+</tbody></table></div>
+<div class="alert"><b>⚠ Clash to resolve:</b> RELB163 Section B (Wed 2:00–4:30 PM) overlaps COSC115 from 3:00 PM. GNED125 Section A (Wed 3:15–4:15 PM) also overlaps COSC115. Keep them visible until VVU confirms your registered sections.</div>
+<div class="alert ok"><b>✓ Course-code note:</b> Your allocation sheet lists PHYS103, while the departmental timetable lists PHYS106 Physics for Computer Science. The portal keeps PHYS106 as the timetable label until VVU confirms the code.</div>
+<div class="section-title"><h2>Assignments & Deadlines</h2><span class="muted">Saved on this device</span></div>
+<section class="two"><div class="card"><input id="taskTitle" class="input" placeholder="Assignment / task"><br><br><input id="taskDate" class="input" type="date"><br><br><button class="btn" onclick="addTask()">+ Add deadline</button></div><div class="card"><div class="list" id="tasks"></div></div></section>
+<div class="footer">VVU Student Portal · Personal study workspace</div></main><script src="app.js"></script><script>
+const g=document.getElementById("courseGrid");courses.forEach(([c,n])=>{g.insertAdjacentHTML("beforeend",`<a class="card course" href="${courseLink(c)}"><div class="code">${c}</div><h3>${n}</h3><p class="muted">Open notes, resources and course workspace →</p></a>`)});
+const day=new Date().getDay(), names=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];todayLabel.textContent=names[day];const rows=[...document.querySelectorAll("[data-day]")].filter(r=>+r.dataset.day===day);rows.forEach(r=>r.classList.add("today"));todayText.textContent=rows.length?rows.map(r=>r.children[2].innerText+" · "+r.children[1].innerText).join(" | "):"No scheduled class in this portal today.";
+function getTasks(){return JSON.parse(localStorage.getItem("vvuTasks")||"[]")}function saveTasks(x){localStorage.setItem("vvuTasks",JSON.stringify(x));renderTasks()}function addTask(){const t=taskTitle.value.trim(),d=taskDate.value;if(!t)return;const x=getTasks();x.push({id:Date.now(),t,d});saveTasks(x);taskTitle.value="";taskDate.value=""}function renderTasks(){const x=getTasks().sort((a,b)=>(a.d||"9999").localeCompare(b.d||"9999"));tasks.innerHTML=x.length?x.map(a=>`<div class="item"><div class="grow"><b>${a.t}</b><div class="muted">${a.d||"No date"}</div></div><button class="btn danger" onclick="removeTask(${a.id})">Delete</button></div>`).join(""):'<p class="muted">No deadlines added yet.</p>'}function removeTask(id){saveTasks(getTasks().filter(x=>x.id!==id))}renderTasks();
+</script></body></html>
