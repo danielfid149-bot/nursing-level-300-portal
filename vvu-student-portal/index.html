@@ -1,34 +1,44 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VVU Student Portal</title><link rel="stylesheet" href="styles.css"></head><body>
-<header class="topbar"><nav class="nav"><a class="brand" href="index.html">VVU // PORTAL<small>COMPUTER SCIENCE · YEAR 1</small></a><div class="spacer"></div><button class="btn" onclick="toggleTheme()">◐ Theme</button></nav></header>
-<main class="shell">
-<section class="hero"><div class="card"><div class="eyebrow">2026/2027 · First Semester</div><h1>Study smarter.<br>Stay ready.</h1><p class="muted">Your personal Valley View University workspace for timetable, courses, notes, assignments and resources.</p></div><div class="card"><div class="eyebrow">Today</div><h2 id="todayLabel">Loading…</h2><p class="muted" id="todayText"></p><span class="chip">Local-first workspace</span></div></section>
-<div class="section-title"><h2>My Courses</h2><span class="muted">9 courses</span></div><section class="grid" id="courseGrid"></section>
-<div class="section-title"><h2>Class Timetable</h2><span class="muted">CS Level 100 · First semester</span></div>
-<div class="table-wrap"><table><thead><tr><th>Day</th><th>Time</th><th>Course</th><th>Venue / Note</th></tr></thead><tbody>
-<tr data-day="1"><td>Monday</td><td>7:00–9:30 AM</td><td><b>PHYS 106</b> · Physics for Computer Science</td><td>CS3</td></tr>
-<tr data-day="1"><td>Monday</td><td>10:00 AM–12:30 PM</td><td><b>MATH 171</b> · Introductory Mathematics for Computer Science</td><td>CS1</td></tr>
-<tr data-day="1"><td>Monday</td><td>2:00–4:30 PM</td><td><b>COSC 113</b> · Elements of Programming</td><td>CS3</td></tr>
-<tr data-day="2"><td>Tuesday</td><td>10:00 AM–12:30 PM</td><td><b>ENGL 111</b> · Language and Writing Skills I</td><td>Baobab RM3</td></tr>
-<tr data-day="2"><td>Tuesday</td><td>4:30–5:30 PM</td><td><b>GNED 125</b> · Study Skills</td><td>American High</td></tr>
-<tr data-day="3"><td>Wednesday</td><td>7:00–9:30 AM</td><td><b>FREN 121</b> · French for General Communication I</td><td>Baobab RM1</td></tr>
-<tr data-day="3"><td>Wednesday</td><td>2:00–4:30 PM</td><td><b>RELB 163</b> · Life and Teachings of Jesus</td><td>American High · ⚠ Clash</td></tr>
-<tr data-day="3"><td>Wednesday</td><td>3:00–5:30 PM</td><td><b>COSC 115</b> · Introduction to Computer Science I</td><td>CS2 · ⚠ Clash</td></tr>
-<tr data-day="4"><td>Thursday</td><td>5:00–6:30 PM</td><td><b>PEAC 100</b> · Physical Activity</td><td>B. Ball Court</td></tr>
-</tbody></table></div>
-<div class="alert"><b>⚠ Wednesday class clash:</b> RELB 163 (2:00–4:30 PM) and COSC 115 (3:00–5:30 PM) overlap from 3:00–4:30 PM. Both appear in the timetable you supplied. Check with your class representative or VVU before relying on either slot.</div>
-<div class="section-title"><h2>Personal Study Timetable</h2><span class="muted">Physics + Elective Maths · exam preparation</span></div>
-<p class="muted">A weekly study plan around your listed classes. These are personal study blocks, not VVU lectures. Adjust the blocks as your routine changes.</p>
-<div class="table-wrap"><table><thead><tr><th>Day</th><th>Time</th><th>Focus</th><th>What to do</th></tr></thead><tbody>
-<tr><td>Tuesday</td><td>7:30–9:00 AM</td><td><b>Physics</b></td><td>Review one topic and solve practice questions</td></tr>
-<tr><td>Thursday</td><td>9:00–10:30 AM</td><td><b>Elective Maths</b></td><td>Work through a topic and timed exercises</td></tr>
-<tr><td>Friday</td><td>9:00–11:00 AM</td><td><b>Physics</b></td><td>Past questions and corrections</td></tr>
-<tr><td>Saturday</td><td>9:00–11:00 AM</td><td><b>Elective Maths</b></td><td>Past questions and corrections</td></tr>
-<tr><td>Sunday</td><td>4:00–5:00 PM</td><td><b>Weekly review</b></td><td>Revisit weak areas in both subjects and plan next week</td></tr>
-</tbody></table></div>
-<div class="section-title"><h2>Assignments & Deadlines</h2><span class="muted">Saved on this device</span></div>
-<section class="two"><div class="card"><input id="taskTitle" class="input" placeholder="Assignment / task"><br><br><input id="taskDate" class="input" type="date"><br><br><button class="btn" onclick="addTask()">+ Add deadline</button></div><div class="card"><div class="list" id="tasks"></div></div></section>
-<div class="footer">VVU Student Portal · Personal study workspace</div></main><script src="app.js"></script><script>
-const g=document.getElementById("courseGrid");courses.forEach(([c,n])=>{g.insertAdjacentHTML("beforeend",`<a class="card course" href="${courseLink(c)}"><div class="code">${c}</div><h3>${n}</h3><p class="muted">Open notes, resources and course workspace →</p></a>`)});
-const day=new Date().getDay(), names=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];todayLabel.textContent=names[day];const rows=[...document.querySelectorAll("[data-day]")].filter(r=>+r.dataset.day===day);rows.forEach(r=>r.classList.add("today"));todayText.textContent=rows.length?rows.map(r=>r.children[2].innerText+" · "+r.children[1].innerText).join(" | "):"No scheduled class in this portal today.";
-function getTasks(){return JSON.parse(localStorage.getItem("vvuTasks")||"[]")}function saveTasks(x){localStorage.setItem("vvuTasks",JSON.stringify(x));renderTasks()}function addTask(){const t=taskTitle.value.trim(),d=taskDate.value;if(!t)return;const x=getTasks();x.push({id:Date.now(),t,d});saveTasks(x);taskTitle.value="";taskDate.value=""}function renderTasks(){const x=getTasks().sort((a,b)=>(a.d||"9999").localeCompare(b.d||"9999"));tasks.innerHTML=x.length?x.map(a=>`<div class="item"><div class="grow"><b>${a.t}</b><div class="muted">${a.d||"No date"}</div></div><button class="btn danger" onclick="removeTask(${a.id})">Delete</button></div>`).join(""):'<p class="muted">No deadlines added yet.</p>'}function removeTask(id){saveTasks(getTasks().filter(x=>x.id!==id))}renderTasks();
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#080c18" />
+  <title>My VVU Portal · V2</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#/dashboard" aria-label="Go to dashboard">
+        <span class="brand-mark">VV</span>
+        <span><b>My VVU Portal</b><small>Local V2 · 2026/27</small></span>
+      </a>
+      <nav id="mainNav" class="nav"></nav>
+      <div class="sidebar-bottom">
+        <div class="storage-card"><span>Local storage</span><b id="storageUsage">Checking…</b><div class="storage-track"><i id="storageBar"></i></div></div>
+        <button class="ghost-btn full" id="themeBtn" type="button">◐ Toggle theme</button>
+      </div>
+    </aside>
+    <div class="main-wrap">
+      <header class="mobile-header">
+        <button class="icon-btn" id="menuBtn" aria-label="Open navigation">☰</button>
+        <a class="mini-brand" href="#/dashboard">VVU Portal</a>
+        <span class="status-chip"><i></i>Local</span>
+      </header>
+      <main id="app" class="page-root" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <dialog id="confirmDialog" class="modal">
+    <form method="dialog">
+      <h3 id="confirmTitle">Confirm</h3><p id="confirmText"></p>
+      <div class="modal-actions"><button value="cancel" class="ghost-btn">Cancel</button><button value="ok" class="danger-btn">Delete</button></div>
+    </form>
+  </dialog>
+  <div id="toastHost" class="toast-host" aria-live="polite"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>
